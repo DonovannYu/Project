@@ -1,1 +1,23 @@
-This project stores student records in a binary file (students.dat) using fwrite() and fread(). Binary storage was chosen because it allows an entire Student structure to be saved and loaded with a single function call, resulting in simpler code and efficient storage. The project is organized using a header file for abstraction, a separate implementation file for the registry functions, and a main.c file for the menu and user interaction.
+# Dr. Santos' Enhanced Student Registry
+
+## Project Description
+
+Dr. Santos' Enhanced Student Registry is a C programming project that manages student records with file handling and data abstraction.
+
+The original Student Registry only stored information temporarily in memory. This enhanced version uses file input/output operations so student records can be saved and loaded even after the program is closed.
+
+The project demonstrates:
+- Structures in C
+- Header file abstraction
+- Multi-file programming
+- File handling using fopen(), fread(), fwrite(), and fclose()
+- Data persistence
+
+
+---
+
+# How to Compile
+
+## Using Makefile (Recommended)
+
+Compile the program:
