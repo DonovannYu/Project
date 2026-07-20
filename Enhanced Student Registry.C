@@ -1,94 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "student_registry.h"
 
+Student students[MAX_STUDENTS];
+int studentCount = 0;
 
-// ===============================
-// ADD STUDENT FUNCTION
-// ===============================
-void addStudent(Student students[], int *count)
+/* ===========================
+   Add Student
+   =========================== */
+void addStudent(void)
 {
-    if (*count >= MAX_STUDENTS)
+    if (studentCount >= MAX_STUDENTS)
     {
-        printf("\nStudent limit reached!\n");
+        printf("\nRegistry is full!\n");
         return;
     }
 
+    Student s;
+
     printf("\nEnter Student ID: ");
-    scanf("%d", &students[*count].id);
+    scanf("%d", &s.id);
+    getchar();
 
-    getchar(); // clear input buffer
+    /* Check duplicate ID */
+    for (int i = 0; i < studentCount; i++)
+    {
+        if (students[i].id == s.id)
+        {
+            printf("Student ID already exists.\n");
+            return;
+        }
+    }
 
-    printf("Enter Student Name: ");
-    fgets(students[*count].name, sizeof(students[*count].name), stdin);
-    students[*count].name[strcspn(students[*count].name, "\n")] = '\0';
-
+    printf("Enter Name: ");
+    fgets(s.name, sizeof(s.name), stdin);
+    s.name[strcspn(s.name, "\n")] = '\0';
 
     printf("Enter Major: ");
-    fgets(students[*count].major, sizeof(students[*count].major), stdin);
-    students[*count].major[strcspn(students[*count].major, "\n")] = '\0';
-
+    fgets(s.major, sizeof(s.major), stdin);
+    s.major[strcspn(s.major, "\n")] = '\0';
 
     printf("Enter GPA: ");
-    scanf("%f", &students[*count].gpa);
+    scanf("%f", &s.gpa);
 
+    printf("Enter Credits: ");
+    scanf("%d", &s.credits);
 
-    printf("Enter Credits Completed: ");
-    scanf("%d", &students[*count].credits);
-
-
-    (*count)++;
+    students[studentCount++] = s;
 
     printf("\nStudent added successfully!\n");
 }
 
-
-
-// ===============================
-// DISPLAY ALL STUDENTS
-// ===============================
-void displayAllStudents(Student students[], int count)
+/* ===========================
+   Display All Students
+   =========================== */
+void displayAllStudents(void)
 {
-    if (count == 0)
+    if (studentCount == 0)
     {
-        printf("\nNo student records found.\n");
+        printf("\nNo students found.\n");
         return;
     }
 
+    printf("\n===============================================================\n");
+    printf("%-6s %-25s %-18s %-5s %-8s\n",
+           "ID", "Name", "Major", "GPA", "Credits");
+    printf("===============================================================\n");
 
-    printf("\n===== STUDENT LIST =====\n");
-
-
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < studentCount; i++)
     {
-        printf("\nStudent #%d\n", i + 1);
-        printf("ID      : %d\n", students[i].id);
-        printf("Name    : %s\n", students[i].name);
-        printf("Major   : %s\n", students[i].major);
-        printf("GPA     : %.2f\n", students[i].gpa);
-        printf("Credits : %d\n", students[i].credits);
+        printf("%-6d %-25s %-18s %-5.2f %-8d\n",
+               students[i].id,
+               students[i].name,
+               students[i].major,
+               students[i].gpa,
+               students[i].credits);
     }
+
+    printf("===============================================================\n");
 }
 
-
-
-// ===============================
-// SEARCH STUDENT BY ID
-// ===============================
-void searchByID(Student students[], int count)
+/* ===========================
+   Search by Student ID
+   =========================== */
+void searchByID(void)
 {
     int id;
     int found = 0;
 
-
-    printf("\nEnter Student ID to search: ");
+    printf("\nEnter Student ID: ");
     scanf("%d", &id);
 
-
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < studentCount; i++)
     {
         if (students[i].id == id)
         {
-            printf("\nStudent Found!\n");
-
+            printf("\nStudent Found\n");
+            printf("-----------------------------\n");
             printf("ID      : %d\n", students[i].id);
             printf("Name    : %s\n", students[i].name);
             printf("Major   : %s\n", students[i].major);
@@ -100,158 +109,138 @@ void searchByID(Student students[], int count)
         }
     }
 
-
     if (!found)
-    {
-        printf("\nStudent not found.\n");
-    }
+        printf("Student not found.\n");
 }
 
-
-
-// ===============================
-// FIND STUDENTS BY GPA
-// ===============================
-void findByGPA(Student students[], int count)
+/* ===========================
+   Search by GPA
+   =========================== */
+void findByGPA(void)
 {
-    float gpa;
+    float minGPA;
     int found = 0;
 
-
     printf("\nEnter minimum GPA: ");
-    scanf("%f", &gpa);
+    scanf("%f", &minGPA);
 
+    printf("\nStudents with GPA >= %.2f\n\n", minGPA);
 
-    printf("\nStudents with GPA %.2f or higher:\n", gpa);
-
-
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < studentCount; i++)
     {
-        if (students[i].gpa >= gpa)
+        if (students[i].gpa >= minGPA)
         {
-            printf("\nID: %d", students[i].id);
-            printf("\nName: %s", students[i].name);
-            printf("\nMajor: %s", students[i].major);
-            printf("\nGPA: %.2f\n", students[i].gpa);
+            printf("%d | %s | %s | %.2f | %d\n",
+                   students[i].id,
+                   students[i].name,
+                   students[i].major,
+                   students[i].gpa,
+                   students[i].credits);
 
             found = 1;
         }
     }
 
-
     if (!found)
-    {
-        printf("\nNo students matched the GPA requirement.\n");
-    }
+        printf("No matching students found.\n");
 }
-
-
-
-// ===============================
-// FIND STUDENTS BY MAJOR
-// ===============================
-void findByMajor(Student students[], int count)
+/* ===========================
+   Search by Major
+   =========================== */
+void findByMajor(void)
 {
     char major[50];
     int found = 0;
 
+    getchar();  // Clear input buffer
 
-    getchar();
-
-    printf("\nEnter Major to search: ");
+    printf("\nEnter Major: ");
     fgets(major, sizeof(major), stdin);
-
     major[strcspn(major, "\n")] = '\0';
 
+    printf("\nStudents in %s\n\n", major);
 
-
-    printf("\nStudents under %s:\n", major);
-
-
-
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < studentCount; i++)
     {
         if (strcmp(students[i].major, major) == 0)
         {
-            printf("\nID: %d", students[i].id);
-            printf("\nName: %s", students[i].name);
-            printf("\nGPA: %.2f\n", students[i].gpa);
+            printf("%d | %s | %.2f | %d\n",
+                   students[i].id,
+                   students[i].name,
+                   students[i].gpa,
+                   students[i].credits);
 
             found = 1;
         }
     }
 
-
     if (!found)
-    {
-        printf("\nNo students found under that major.\n");
-    }
+        printf("No students found in that major.\n");
 }
 
-
-
-// ===============================
-// SAVE STUDENTS TO FILE
-// ===============================
-void saveStudentsToFile(Student students[], int count)
+/* ===========================
+   Save Students to File
+   =========================== */
+void saveStudentsToFile(void)
 {
-    FILE *file;
-
-
-    file = fopen(FILE_NAME, "wb");
-
+    FILE *file = fopen(DATA_FILE, "w");
 
     if (file == NULL)
     {
-        printf("\nError opening file for saving.\n");
+        printf("Error: Could not save data.\n");
         return;
     }
 
-
-    fwrite(&count, sizeof(int), 1, file);
-
-
-    fwrite(students, sizeof(Student), count, file);
-
+    for (int i = 0; i < studentCount; i++)
+    {
+        fprintf(file,
+                "%d|%s|%s|%.2f|%d\n",
+                students[i].id,
+                students[i].name,
+                students[i].major,
+                students[i].gpa,
+                students[i].credits);
+    }
 
     fclose(file);
 
-
-    printf("\nStudent records saved successfully!\n");
+    printf("\nSaved %d student(s) successfully.\n", studentCount);
 }
 
-
-
-// ===============================
-// LOAD STUDENTS FROM FILE
-// ===============================
-void loadStudentsFromFile(Student students[], int *count)
+/* ===========================
+   Load Students from File
+   =========================== */
+void loadStudentsFromFile(void)
 {
-    FILE *file;
-
-
-    file = fopen(FILE_NAME, "rb");
-
+    FILE *file = fopen(DATA_FILE, "r");
 
     if (file == NULL)
     {
-        printf("\nNo existing data file found. Starting fresh.\n");
-        *count = 0;
+        printf("No existing data file found. Starting fresh.\n");
         return;
     }
 
+    studentCount = 0;
 
+    while (studentCount < MAX_STUDENTS)
+    {
+        Student s;
 
-    fread(count, sizeof(int), 1, file);
+        int result = fscanf(file,
+                            "%d|%99[^|]|%49[^|]|%f|%d\n",
+                            &s.id,
+                            s.name,
+                            s.major,
+                            &s.gpa,
+                            &s.credits);
 
+        if (result != 5)
+            break;
 
-    fread(students, sizeof(Student), *count, file);
-
-
+        students[studentCount++] = s;
+    }
 
     fclose(file);
 
-
-
-    printf("\nLoaded %d students from file.\n", *count);
+    printf("Loaded %d student(s).\n", studentCount);
 }
