@@ -2,14 +2,11 @@
 #define STUDENT_REGISTRY_H
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define MAX_STUDENTS 100
-#define FILE_NAME "students.dat"
+#define DATA_FILE "students.dat"
 
-typedef struct
-{
+typedef struct {
     int id;
     char name[100];
     char major[50];
@@ -17,15 +14,19 @@ typedef struct
     int credits;
 } Student;
 
-/* Core Functions */
-void addStudent(Student students[], int *count);
-void displayAllStudents(Student students[], int count);
-void searchByID(Student students[], int count);
-void findByGPA(Student students[], int count);
-void findByMajor(Student students[], int count);
+/* Global data */
+extern Student students[MAX_STUDENTS];
+extern int studentCount;
 
-/* File Functions */
-void saveStudentsToFile(Student students[], int count);
-void loadStudentsFromFile(Student students[], int *count);
+/* Core Functions */
+void addStudent(void);
+void displayAllStudents(void);
+void searchByID(void);
+void findByGPA(void);
+void findByMajor(void);
+
+/* File Handling */
+void saveStudentsToFile(void);
+void loadStudentsFromFile(void);
 
 #endif
