@@ -1,88 +1,73 @@
+#include <stdio.h>
 #include "student_registry.h"
 
-
-int main()
+void displayMenu(void)
 {
-    Student students[MAX_STUDENTS];
+    printf("\n=====================================\n");
+    printf("     ENHANCED STUDENT REGISTRY\n");
+    printf("=====================================\n");
+    printf("1. Add Student\n");
+    printf("2. Display All Students\n");
+    printf("3. Search by Student ID\n");
+    printf("4. Find by GPA Threshold\n");
+    printf("5. Find by Major\n");
+    printf("6. Save & Exit\n");
+    printf("=====================================\n");
+    printf("Enter your choice: ");
+}
 
-    int studentCount = 0;
+int main(void)
+{
     int choice;
 
-
-    // Load previous records when program starts
-    loadStudentsFromFile(students, &studentCount);
-
-
+    /* Load saved data at startup */
+    loadStudentsFromFile();
 
     do
     {
-        printf("\n====================================");
-        printf("\n   DR. SANTOS' STUDENT REGISTRY");
-        printf("\n====================================\n");
+        displayMenu();
 
-        printf("1. Add Student\n");
-        printf("2. Display All Students\n");
-        printf("3. Search by Student ID\n");
-        printf("4. Find by GPA Threshold\n");
-        printf("5. Find by Major\n");
-        printf("6. Save & Exit\n");
-
-
-        printf("\nEnter your choice: ");
-        scanf("%d", &choice);
-
-
-
-        switch(choice)
+        if (scanf("%d", &choice) != 1)
         {
+            printf("Invalid input.\n");
 
+            while (getchar() != '\n');
+
+            continue;
+        }
+
+        switch (choice)
+        {
             case 1:
-                addStudent(students, &studentCount);
+                addStudent();
                 break;
-
-
 
             case 2:
-                displayAllStudents(students, studentCount);
+                displayAllStudents();
                 break;
-
-
 
             case 3:
-                searchByID(students, studentCount);
+                searchByID();
                 break;
-
-
 
             case 4:
-                findByGPA(students, studentCount);
+                findByGPA();
                 break;
-
-
 
             case 5:
-                findByMajor(students, studentCount);
+                findByMajor();
                 break;
 
-
-
             case 6:
-                saveStudentsToFile(students, studentCount);
-
+                saveStudentsToFile();
                 printf("\nThank you for using Student Registry!\n");
                 break;
 
-
-
             default:
                 printf("\nInvalid choice. Please try again.\n");
-
         }
 
-
-    } while(choice != 6);
-
-
+    } while (choice != 6);
 
     return 0;
 }
