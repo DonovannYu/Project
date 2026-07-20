@@ -152,23 +152,24 @@ void findByMajor(void)
     char major[50];
     int found = 0;
 
-    getchar();  // Clear input buffer
+    getchar();   // clear newline
 
     printf("\nEnter Major: ");
     fgets(major, sizeof(major), stdin);
     major[strcspn(major, "\n")] = '\0';
 
-    printf("\nStudents in %s\n\n", major);
+    printf("\nStudents in %s\n", major);
+    printf("---------------------------------------------\n");
 
     for (int i = 0; i < studentCount; i++)
     {
         if (strcmp(students[i].major, major) == 0)
         {
-            printf("%d | %s | %.2f | %d\n",
-                   students[i].id,
-                   students[i].name,
-                   students[i].gpa,
-                   students[i].credits);
+            printf("ID: %d\n", students[i].id);
+            printf("Name: %s\n", students[i].name);
+            printf("Major: %s\n", students[i].major);
+            printf("GPA: %.2f\n", students[i].gpa);
+            printf("Credits: %d\n\n", students[i].credits);
 
             found = 1;
         }
